@@ -6,7 +6,7 @@ define([
         var reply = this._get_msg("kernel_info_reply", {
             protocol_version: '5.0.0',
             implementation: 'jskernel',
-            implementation_version: '0.0.2',
+            implementation_version: '0.0.3',
             language_info: {
                 name: "javascript",
                 mimetype: "text/javascript",
@@ -47,7 +47,7 @@ define([
             data += "\n";
             var msg = that._get_msg("stream", {name: "stdout", text: data});
             msg.parent_header = request.header;
-            that._handle_iopub_message({data : JSON.stringify(msg)});
+            that._handle_iopub_message(msg);
         };
         try {
             r = eval(code);
@@ -80,15 +80,15 @@ define([
                 });
             }
             result.parent_header = request.header;
-            this._handle_iopub_message({data : JSON.stringify(result)});
+            this._handle_iopub_message(result);
         }
         
         var idle = this._get_msg("status", {status: "idle"});
         idle.parent_header = request.header;
         
         this.execution_count = this.execution_count + 1;
-        this._handle_iopub_message({data : JSON.stringify(idle)});
-        this._handle_shell_reply({data : JSON.stringify(reply)});
+        this._handle_iopub_message(idle);
+        this._handle_shell_reply(reply);
     };
 
     
